@@ -8,10 +8,14 @@ import 'element-plus/dist/index.css';
 //引入初始化样式文件
 import '@/styles/element/common.scss'
 
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
 const pinia = createPinia();
 const app = createApp(App);
 
 // 在一个应用实例上安装所有插件
+// 注册持久化插件
+pinia.use(piniaPluginPersistedstate)
 app.use(ElementPlus);
 app.use(pinia);
 app.use(router);

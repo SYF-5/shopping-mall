@@ -48,11 +48,18 @@ const doLogin=()=>{
         try {
         // 模拟登录请求
         // 这里应该是调用API，但先模拟登录成功
-        userStore.login({
-          id: Date.now(),   //时间戳作为唯一id
-          name: form.value.account, // 使用输入的用户名
-          account: form.value.account,
-        });
+        // 创建一个token
+      const mockToken = `mock-token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        
+        // 调用 store 的 login action，并传入模拟的用户数据和token
+        userStore.login(
+          {
+            id: Date.now(),   // 时间戳作为唯一id
+            name: form.value.account, // 使用输入的用户名
+            account: form.value.account,
+          },
+          mockToken // 这是第二个参数 - token
+        );
         
         // 显示成功消息
         ElMessage.success('登录成功！');

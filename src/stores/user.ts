@@ -9,6 +9,7 @@ export interface IUser {
   name: string
   account: number
   password: number
+  token?: string
 }
 
 // 2. 定义并导出 Store
@@ -16,6 +17,7 @@ export const useUserStore = defineStore('user', () => {
   // 3. 定义状态 (State) - 相当于组件的 data
   const userInfo = ref<IUser | null>(null) // 用户信息，初始为 null
   const isLogin = ref(false) // 登录状态，初始为 false
+  const token = ref<string | null>(null) // 单独存储 token
 
   // 4. 定义计算属性 (Getters) - 相当于组件的 computed
   // 这是一个简单的计算属性，其实和 isLogin.value 作用一样，但展示了如何定义
@@ -23,17 +25,17 @@ export const useUserStore = defineStore('user', () => {
 
   // 5. 定义动作 (Actions) - 相当于组件的 methods
   // 模拟登录动作
-  const login = (userData: IUser) => {
+  const login = (userData: IUser, userToken: string) => {
     userInfo.value = userData // 设置用户信息
+    token.value = userToken // 存储 token
     isLogin.value = true // 更新登录状态
-    console.log('登录成功:', userInfo.value)
   }
 
   // 模拟退出登录动作
   const logout = () => {
     userInfo.value = null // 清空用户信息
+    token.value = null      //清空token
     isLogin.value = false // 更新登录状态
-    console.log('已退出登录')
   }
 
   // 6. 返回所有需要暴露出去的变量和方法
@@ -41,7 +43,14 @@ export const useUserStore = defineStore('user', () => {
     userInfo,
     isLogin,
     getUserStatus,
+    token,
     login,
     logout
+  }
+}, {
+  persist: {
+    key: 'user-store',
+    paths: ['userInfo', 'isLogin', 'token'],
+    storage: localStorage // 明确指定使用localStorage
   }
 })
