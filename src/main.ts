@@ -7,7 +7,7 @@ import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 //引入初始化样式文件
 import '@/styles/element/common.scss'
-
+import '@/assets/iconfont/iconfont.css'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 const pinia = createPinia();

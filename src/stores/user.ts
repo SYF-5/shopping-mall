@@ -52,5 +52,5 @@ export const useUserStore = defineStore('user', () => {
     key: 'user-store',
     paths: ['userInfo', 'isLogin', 'token'],
     storage: localStorage // 明确指定使用localStorage
-  }
+  } as any
 })

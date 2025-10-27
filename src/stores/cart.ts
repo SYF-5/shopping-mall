@@ -1,45 +1,83 @@
-// src/stores/cart.ts
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
-import type { Product } from '@/types';
+
+export interface Goods {
+  id: number;
+  name: string;
+  description: string;
+  picture: string;
+  price: number;
+  stock: number;
+}
 
 export interface CartItem {
   id: number;
-  goods: Product;
+  goods: Goods;
   count: number;
   selected: boolean;
+  addedTime: string;
 }
 
-export const useCartStore = defineStore('cart', () => {
-  const cartList = ref<CartItem[]>([]);
+interface CartState {
+  cartList: CartItem[];
+  loading: boolean;
+  error: string | null;
+}
 
-  // 添加商品到购物车
-  const addItem = (product: Product) => {
-    const existingItem = cartList.value.find(item => item.goods.id === product.id);
+export const useCartStore = defineStore('cart', {
+  state: (): CartState => ({
+    cartList: [],
+    loading: false,
+    error: null
+  }),
 
-    if (existingItem) {
-      existingItem.count += 1;
-    } else {
-      cartList.value.push({
-        id: product.id,
-        goods: product,
-        count: 1,
-        selected: true
-      });
+  getters: {
+    isAllSelected: (state) => {
+      if (state.cartList.length === 0) return false;
+      return state.cartList.every(item => item.selected);
+    },
+
+    selectedCount: (state) => {
+      return state.cartList.filter(item => item.selected).length;
+    },
+
+    totalPrice: (state) => {
+      return state.cartList
+        .filter(item => item.selected)
+        .reduce((total, item) => total + item.goods.price * item.count, 0)
+        .toFixed(2);
+    },
+
+    selectedItems: (state) => {
+      return state.cartList.filter(item => item.selected);
     }
+  },
 
-    // 可以添加一些用户反馈
-    console.log(`已添加 ${product.name} 到购物车`);
-  };
+  actions: {
+    changeQuantity(id: number, quantity: number) {
+      const item = this.cartList.find(item => item.id === id);
+      if (item) {
+        item.count = Math.max(1, Math.min(quantity, item.goods.stock));
+      }
+    },
 
-  // 获取购物车商品总数
-  const totalItems = () => {
-    return cartList.value.reduce((total, item) => total + item.count, 0);
-  };
+    toggleSelect(id: number) {
+      const item = this.cartList.find(item => item.id === id);
+      if (item) {
+        item.selected = !item.selected;
+      }
+    },
 
-  return {
-    cartList,
-    addItem,
-    totalItems
-  };
+    selectAll(selected: boolean) {
+      this.cartList.forEach(item => {
+        item.selected = selected;
+      });
+    },
+
+    removeItem(id: number) {
+      const index = this.cartList.findIndex(item => item.id === id);
+      if (index !== -1) {
+        this.cartList.splice(index, 1);
+      }
+    }
+  }
 });
