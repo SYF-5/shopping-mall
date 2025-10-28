@@ -6,7 +6,7 @@ import router from '@/router';
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api', // 从环境变量获取API基础URL
+  baseURL: '',
   timeout: 10000, // 请求超时时间
 });
 
@@ -34,7 +34,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     // 对响应数据做点什么
-    return response.data;
+    return response;
   },
   (error) => {
     // 对响应错误做点什么

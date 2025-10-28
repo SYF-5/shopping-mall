@@ -16,3 +16,8 @@ export interface CartItem {
   count: number;      // 数量
   selected: boolean;  // 是否选中（用于结算）
 }
+
+// 商品列表响应类型
+export interface ProductsResponse {
+  products: Product[]
+}
