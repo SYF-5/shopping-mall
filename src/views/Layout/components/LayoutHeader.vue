@@ -27,7 +27,7 @@
         <input type="text" placeholder="搜一搜">
       </div>
       <!-- 头部购物车 -->
-      <a href=""><i class="iconfont icon-gouwuche"  style="font-size: 24px;"></i></a>
+  <router-link to="/Cart"><i class="iconfont icon-gouwuche"  style="font-size: 24px;"></i></router-link>
     </div>
   </header>
 </template>
