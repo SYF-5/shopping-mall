@@ -2,10 +2,8 @@
   <div id="app">
     <div class="container">
       <div class="header">
-        <h1>我的购物车</h1>
-        <p>查看您的商品并结算</p>
         <div class="cart-stats" v-if="!loading">
-          共 {{ cartStore.totalItems }} 件商品
+        
         </div>
       </div>
       
@@ -107,6 +105,8 @@ onMounted(() => {
   loading.value = true
   try {
     cartStore.loadFromLocalStorage()
+    // 确保购物车中的商品有图片数据
+    ensureCartItemsHaveImages()
   } catch (err) {
     console.error('加载购物车数据失败:', err)
     error.value = true
@@ -114,9 +114,99 @@ onMounted(() => {
     loading.value = false
   }
 })
+
+// 确保购物车中的商品有图片数据
+const ensureCartItemsHaveImages = async () => {
+  // 如果购物车中的商品缺少图片数据，可以从商品服务中获取
+  for (const item of cartStore.cartItems) {
+    if (!item.picture) {
+      try {
+        // 假设您有一个获取商品详情的方法
+        // const productDetail = await productService.getProductById(item.id)
+        // item.picture = productDetail.picture
+        
+        // 临时使用默认图片
+        item.picture = getDefaultImageForProduct(item)
+      } catch (err) {
+        console.error(`获取商品 ${item.id} 的图片失败:`, err)
+        // 使用默认图片
+        item.picture = getDefaultImageForProduct(item)
+      }
+    }
+  }
+}
+
+// 根据商品类型获取默认图片
+const getDefaultImageForProduct = (item: any) => {
+  // 根据商品类型返回不同的默认图片
+  const defaultImages = {
+    vegetables: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=150',
+    fruits: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=150',
+    grains: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=150',
+    eggs: 'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=150',
+    default: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=150'
+  }
+  
+  return defaultImages[item.category] || defaultImages.default
+}
 </script>
 
-<!-- 样式保持不变 -->
 <style scoped>
-/* ... 你的现有样式 ... */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.cart-stats {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #4a5568;
+}
+
+.cart-actions {
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.clear-cart-btn {
+  background-color: #e53e3e;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.clear-cart-btn:hover {
+  background-color: #c53030;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: #e53e3e;
+}
 </style>
