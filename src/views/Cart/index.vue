@@ -39,7 +39,8 @@
           :subtotal="cartStore.subtotal"
           :shipping="cartStore.shipping"
           :discount="cartStore.discount"
-          :total="cartStore.total"
+          :total="cartStore.total"    
+          @clear-cart-instant="clearCartInstant"
         />
       </div>
       
@@ -99,6 +100,11 @@ const clearCart = () => {
     cartStore.clearCart()
     alert('购物车已清空')
   }
+}
+
+const clearCartInstant = () => {
+  // 直接清空购物车，不需要确认
+  cartStore.clearCart()
 }
 
 onMounted(() => {

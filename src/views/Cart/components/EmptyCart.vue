@@ -3,7 +3,7 @@
     <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTYgMjU2Ij48cmVjdCB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgZmlsbD0iI2Y1ZjVmNSIvPjxwYXRoIGQ9Ik0xMjgsMzJhOTYsOTYsMCwxLDAsOTYsOTZBOTYuMTEsOTYuMTEsMCwwLDAsMTI4LDMyWm0wLDE2YTgwLDgwLDAsMSwxLTgwLTgwQTgwLjA5LDgwLjA5LDAsMCwxLDEyOCw0OFoiIGZpbGw9IiNkZGQiLz48cGF0aCBkPSJNMTY4LDcySDg4YTgsOCwwLDAsMCwwLDE2aDgwYTgsOCwwLDAsMCwwLTE2WiIgZmlsbD0iI2RkZCIvPjxwYXRoIGQ9Ik0xNzYsMTEySDgwYTgsOCwwLDAsMCwwLDE2aDk2YTgsOCwwLDAsMCwwLTE2WiIgZmlsbD0iI2RkZCIvPjxwYXRoIGQ9Ik0xNjAsMTUySDk2YTgsOCwwLDAsMCwwLDE2aDY0YTgsOCwwLDAsMCwwLTE2WiIgZmlsbD0iI2RkZCIvPjwvc3ZnPg==" alt="空购物车">
     <h3>您的购物车是空的</h3>
     <p>快去挑选一些心仪的商品吧</p>
-    <router-link to="/"   class="continue-shopping">前往购物</router-link>
+    <router-link to="/" class="continue-shopping">前往购物</router-link>
   </div>
 </template>
 

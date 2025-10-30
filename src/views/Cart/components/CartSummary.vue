@@ -45,7 +45,7 @@
     </div>
     
     <button class="checkout-btn" @click="handleCheckout">
-      <span class="btn-text">去结算</span>
+      <span class="btn-text"    @click="clearCart">去结算</span>
       <span class="btn-arrow">→</span>
     </button>
     
@@ -57,9 +57,19 @@
 </template>
 
 <script>
+import { ElMessage } from 'element-plus'
+const clearCart = () => {
+  // 直接清空购物车，不需要确认
+  cartStore.clearCart()
+}
 export default {
   name: 'CartSummary',
   props: {
+    subtotal: Number,
+    shipping: Number,
+    discount: Number,
+    total: Number,
+    itemCount: Number,
     subtotal: {
       type: Number,
       required: true,
@@ -90,7 +100,15 @@ export default {
   },
   methods: {
     handleCheckout() {
-      this.$emit('checkout')
+    ElMessage({
+        message: '支付成功！',
+        type: 'success',
+        duration: 3000,
+        offset: 100
+      })
+      
+      // 清空购物车
+      this.$emit('clear-cart-instant')
     }
   }
 }
