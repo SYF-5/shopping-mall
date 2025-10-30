@@ -15,7 +15,7 @@
       <input 
         type="number" 
         :value="item.quantity" 
-        @input="$emit('update-quantity', parseInt($event.target.value) || 1)"
+        @input="$emit('update-quantity', parseInt(($event.target as HTMLInputElement)?.value ?? '0') || 1)"
         min="1"
         :max="item.stock || 10"
       >
@@ -33,7 +33,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 
 defineProps<{
   item: any
@@ -141,7 +140,9 @@ const handleImageError = (event: Event) => {
   border-left: none;
   border-right: none;
   margin: 0;
-  -moz-appearance: textfield;
+  -webkit-appearance: none; /* Safari 和 Chrome */
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield; /* 标准属性 */
 }
 
 .quantity-control input::-webkit-outer-spin-button,

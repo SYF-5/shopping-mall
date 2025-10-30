@@ -115,7 +115,7 @@ const goToProductDetail = (product: Product) => {
 
 // 添加到购物车
 const addToCart = (product: Product) => {
-  cartStore.addItem(product)
+  cartStore.addToCart(product)
 }
 
 // 重新获取数据的方法

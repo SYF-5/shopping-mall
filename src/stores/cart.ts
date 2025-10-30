@@ -35,8 +35,8 @@ export const useCartStore = defineStore('cart', {
     },
 
     // 总价
-    total: (state) => {
-      return state.subtotal + state.shipping - state.discount
+    total(): number {
+      return this.subtotal + this.shipping - this.discount
     },
 
     // 购物车是否为空

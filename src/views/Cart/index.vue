@@ -153,7 +153,7 @@ const getDefaultImageForProduct = (item: any) => {
     default: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=150'
   }
   
-  return defaultImages[item.category] || defaultImages.default
+  return defaultImages[item.category as keyof typeof defaultImages] || defaultImages.default;
 }
 </script>
 
