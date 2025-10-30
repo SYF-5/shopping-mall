@@ -34,5 +34,31 @@ export default defineConfig({
         `,
       }
     }
+  },
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            // 更精细化的分包
+            if (id.includes('element-plus') || id.includes('element-ui')) {
+              return 'vendor-element'
+            }
+            if (id.includes('echarts') || id.includes('zrender')) {
+              return 'vendor-charts'
+            }
+            if (id.includes('lodash') || id.includes('moment')) {
+              return 'vendor-utils'
+            }
+            if (id.includes('vue')) {
+              return 'vendor-vue'
+            }
+            // 其他依赖
+            return 'vendor-other'
+          }
+        }
+      }
+    }
   }
 });
