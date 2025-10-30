@@ -33,7 +33,7 @@ const categoryMap = {
 
 // 计算属性
 const cartItemCount = computed(() => {
-  return cartStore
+  return cartStore.totalItems
 })
 
 const maxQuantity = computed(() => {

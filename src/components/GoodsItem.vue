@@ -1,4 +1,3 @@
-<!-- 商品卡片组件 -->
 <template>
   <div class="goods-item" @click="handleItemClick">
     <div class="goods-image">
@@ -9,65 +8,112 @@
       <p class="goods-desc">{{ product.description }}</p>
       <div class="goods-price">
         <span class="price">¥{{ product.price }}</span>
-        <button class="add-cart-btn" @click.stop="handleAddToCart">+</button>
+        <!-- 使用原生按钮或确保阻止事件冒泡 -->
+        <button 
+          class="add-cart-btn" 
+          @click.stop="handleAddToCart"
+          :disabled="isAddingToCart"
+        >
+          <span v-if="!isAddingToCart">+</span>
+          <span v-else class="loading-spinner">●</span>
+        </button>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { useRouter } from 'vue-router';
-import type { Product } from '@/types';
+<script setup>
+import { ref } from 'vue'
+import { useCartStore } from '@/stores/cart'
+import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
 
-const router = useRouter();
+// 接收商品数据
+const props = defineProps({
+  product: {
+    type: Object,
+    required: true
+  }
+})
 
-const props = defineProps<{
-  product: Product
-}>()
+const cartStore = useCartStore()
+const router = useRouter()
+const isAddingToCart = ref(false)
 
-const emit = defineEmits<{
-  (e: 'add-to-cart', product: Product): void
-}>()
+// 处理添加购物车
+const handleAddToCart = async () => {
+  if (!props.product) return
+  
+  isAddingToCart.value = true
+  
+  try {
+    // 使用 Pinia store 添加商品到购物车
+    await cartStore.addToCart(props.product, 1)
+    
+    // 使用 Element Plus 消息提示
+    ElMessage({
+      message: `"${props.product.name}" 已成功添加到购物车`,
+      type: 'success',
+      duration: 2000,
+      showClose: true,
+      offset: 80
+    })
+    
+    console.log(`成功添加 "${props.product.name}" 到购物车`)
+    
+  } catch (error) {
+    console.error('添加购物车失败:', error)
+    // 错误提示
+    ElMessage({
+      message: '添加商品失败，请重试',
+      type: 'error',
+      duration: 2000,
+      showClose: true
+    })
+  } finally {
+    isAddingToCart.value = false
+  }
+}
 
-// 处理商品点击
+// 原有的点击商品跳转详情功能
 const handleItemClick = () => {
-  console.log('商品被点击:', props.product.id);
-  router.push(`/product/${props.product.id}`);
-};
-
-// 处理添加到购物车
-const handleAddToCart = () => {
-  console.log('添加到购物车:', props.product.name);
-  emit('add-to-cart', props.product);
-};
+  // 跳转到商品详情页
+  router.push(`/product/${props.product.id}`)
+}
 </script>
 
 <style scoped>
 .goods-item {
+  position: relative;
   background: #fff;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+  transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .goods-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .goods-image {
+  position: relative;
   width: 100%;
-  height: 180px;
+  height: 0;
+  padding-bottom: 75%; /* 4:3 宽高比 */
   overflow: hidden;
 }
 
 .goods-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s;
+  transition: transform 0.3s ease;
 }
 
 .goods-item:hover .goods-image img {
@@ -75,25 +121,26 @@ const handleAddToCart = () => {
 }
 
 .goods-info {
-  padding: 15px;
+  padding: 12px;
 }
 
 .goods-name {
   font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 8px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
   color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .goods-desc {
-  color: #666;
   font-size: 14px;
-  margin-bottom: 15px;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  color: #666;
+  margin: 0 0 12px 0;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .goods-price {
@@ -105,25 +152,41 @@ const handleAddToCart = () => {
 .price {
   font-size: 18px;
   font-weight: bold;
-  color: #F53F3F;
+  color: #ff4444;
 }
 
 .add-cart-btn {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: #27BA9B;
+  background: #ff4444;
   color: white;
   border: none;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   font-size: 18px;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
 }
 
-.add-cart-btn:hover {
-  background: #2AC9BC;
+.add-cart-btn:hover:not(:disabled) {
+  background: #cc0000;
+  transform: scale(1.1);
+}
+
+.add-cart-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 </style>
