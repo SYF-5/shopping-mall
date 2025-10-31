@@ -110,3 +110,19 @@ ul {
 .el-breadcrumb__inner.is-link {
   font-weight: 400 !important;
 }
+
+/* 懒加载样式 */
+img[lazy-loading] {
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+img[lazy-loaded] {
+  opacity: 1;
+}
+
+.lazy-bg {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

@@ -10,7 +10,7 @@ import '@/styles/element/common.scss'
 import '@/assets/iconfont/iconfont.css'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
-// 导入懒加载指令
+// 导入自定义懒加载指令
 import { setupLazyLoadDirective } from '@/directives/lazyLoad';
 
 const pinia = createPinia();
@@ -23,6 +23,7 @@ app.use(ElementPlus);
 app.use(pinia);
 app.use(router);
 
-// 注册懒加载指令
+// 注册懒加载指令 - 这会替换原来的 vue3-lazyload
 setupLazyLoadDirective(app);
+
 app.mount('#app');

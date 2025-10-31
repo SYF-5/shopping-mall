@@ -1,33 +1,34 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import { resolve } from 'path'; // 确保正确导入了 path
-
-//elementPlus按需导入
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import { resolve } from 'path';
+import AutoImport from 'unplugin-auto-import/vite';
+import Components from 'unplugin-vue-components/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+import viteCompression from 'vite-plugin-compression';
+// 移除这行：import viteImagemin from 'vite-plugin-imagemin';
 
 export default defineConfig({
   plugins: [
     vue(),
-    // ...
     AutoImport({
       resolvers: [ElementPlusResolver()],
     }),
     Components({
-      resolvers: [
-        ElementPlusResolver({ importStyle: 'sass' })],
+      resolvers: [ElementPlusResolver({ importStyle: 'sass' })],
     }),
+    viteCompression({
+      threshold: 10240,
+    }),
+    // 移除整个 viteImagemin 插件配置
   ],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src') // 使用 path.resolve
+      '@': resolve(__dirname, 'src')
     }
   },
   css: {
     preprocessorOptions: {
       scss: {
-        // 自动导入定制化样式文件进行样式覆盖
         additionalData: `
           @use "@/styles/element/index.scss" as *;
           @use "@/styles/var.scss" as *;
@@ -41,21 +42,13 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // 更精细化的分包
-            if (id.includes('element-plus') || id.includes('element-ui')) {
-              return 'vendor-element'
-            }
-            if (id.includes('echarts') || id.includes('zrender')) {
-              return 'vendor-charts'
-            }
-            if (id.includes('lodash') || id.includes('moment')) {
-              return 'vendor-utils'
+            if (id.includes('element-plus')) {
+              return 'vendor-element';
             }
             if (id.includes('vue')) {
-              return 'vendor-vue'
+              return 'vendor-vue';
             }
-            // 其他依赖
-            return 'vendor-other'
+            return 'vendor-other';
           }
         }
       }

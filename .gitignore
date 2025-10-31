@@ -34,3 +34,4 @@ node_modules/
 
 # Optional: Build cache (if using Vite)
 .cache/
+.vercel
