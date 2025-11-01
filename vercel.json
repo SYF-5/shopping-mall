@@ -1,4 +1,7 @@
 {
+  "env": {
+    "ENABLE_VC_TOOLBAR": "false"
+  },
   "rewrites": [
     {
       "source": "/(.*)",
